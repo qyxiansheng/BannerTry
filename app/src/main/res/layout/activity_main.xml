@@ -6,19 +6,38 @@
 
     <LinearLayout style="@style/MatchWrap.Vertical">
 
-        <cn.bingoogolapple.bgabanner.BGABanner
-            android:id="@+id/banner_main_default"
-            style="@style/BannerDefaultStyle"
-            app:banner_aspectRatio="2.8"
-            app:banner_indicatorGravity="bottom|right"
-            app:banner_isNeedShowIndicatorOnOnlyOnePage="true"
-            app:banner_isNumberIndicator="true"
-            app:banner_numberIndicatorBackground="@drawable/shape_number_indicator_background"
-            app:banner_numberIndicatorTextColor="@android:color/white"
-            app:banner_numberIndicatorTextSize="10sp"
-            app:banner_pointAutoPlayAble="true"
-            app:banner_pointContainerBackground="@android:color/transparent"
-            app:banner_transitionEffect="defaultEffect" />
+        <HorizontalScrollView
+            android:id="@+id/hsview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <cn.bingoogolapple.bgabanner.BGABanner
+                    android:id="@+id/banner_main_default"
+                    style="@style/BannerDefaultStyle"
+                    android:layout_width="300dp"
+                    app:banner_aspectRatio="2.8"
+                    app:banner_indicatorGravity="bottom|right"
+                    app:banner_isNeedShowIndicatorOnOnlyOnePage="true"
+                    app:banner_isNumberIndicator="true"
+                    app:banner_numberIndicatorBackground="@drawable/shape_number_indicator_background"
+                    app:banner_numberIndicatorTextColor="@android:color/white"
+                    app:banner_numberIndicatorTextSize="10sp"
+                    app:banner_pointAutoPlayAble="true"
+                    app:banner_pointContainerBackground="@android:color/transparent"
+                    app:banner_transitionEffect="defaultEffect" />
+
+                <TextView
+                    android:layout_width="500dp"
+                    android:layout_height="match_parent"
+                    android:background="#654822"
+                    android:text="123456789564646546" />
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <LinearLayout style="@style/MatchWrap.Horizontal">
 

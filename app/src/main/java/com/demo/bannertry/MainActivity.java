@@ -1,15 +1,21 @@
 package com.demo.bannertry;
 
 import android.content.Intent;
+import android.support.v4.view.ViewPager;
+import android.support.v4.widget.EdgeEffectCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements BGABanner.Delegat
     private List<String> imagesUrl = new ArrayList();
     private List<String> tips = new ArrayList();
 
+    private HorizontalScrollView hsview;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements BGABanner.Delegat
     }
 
     private void initView() {
+        hsview = findViewById(R.id.hsview);
         mDefaultBanner = findViewById(R.id.banner_main_default);
         mCubeBanner = findViewById(R.id.banner_main_cube);
         mAccordionBanner = findViewById(R.id.banner_main_accordion);
@@ -68,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements BGABanner.Delegat
 
     private void setListener() {
         mDefaultBanner.setDelegate(this);
+        mDefaultBanner.setLastPageScroll(false);
         mCubeBanner.setDelegate(this);
     }
 

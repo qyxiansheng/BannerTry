@@ -15,6 +15,7 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -83,6 +84,8 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
     private View mEnterView;
     private GuideDelegate mGuideDelegate;
     private boolean mIsFirstInvisible = true;
+
+    private boolean isLastPageScroll = true;
 
     private static final ImageView.ScaleType[] sScaleTypeArray = {
             ImageView.ScaleType.MATRIX,
@@ -583,17 +586,50 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
+    private boolean flag = true;
+    private float mLastMotionX;
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         if (mAutoPlayAble) {
-            switch (ev.getAction()) {
-                case MotionEvent.ACTION_DOWN:
-                    stopAutoPlay();
-                    break;
-                case MotionEvent.ACTION_UP:
-                case MotionEvent.ACTION_CANCEL:
-                    startAutoPlay();
-                    break;
+            if (isLastPageScroll) {
+                getViewPager().getParent().requestDisallowInterceptTouchEvent(true);
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        stopAutoPlay();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        startAutoPlay();
+                        break;
+                }
+            } else {
+                final float x = ev.getX();
+                switch (ev.getAction()) {
+                    case MotionEvent.ACTION_DOWN: // 使父控件不处理任何触摸事件
+                        stopAutoPlay();
+                        getParent().requestDisallowInterceptTouchEvent(true);
+                        flag = true;
+                        mLastMotionX = x;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (flag) {
+                            if (x - mLastMotionX < -5 && mViews.size() == mViewPager.getCurrentItem() % mViews.size() + 1) {
+                                flag = false;
+                                getParent().requestDisallowInterceptTouchEvent(false); //将事件交由父控件处理
+                            }
+                            if (x - mLastMotionX > 5) {
+                                flag = false;
+                                getParent().requestDisallowInterceptTouchEvent(true);
+                            }
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        startAutoPlay();
+                        getParent().requestDisallowInterceptTouchEvent(false);
+                        break;
+                }
             }
         }
         return super.dispatchTouchEvent(ev);
@@ -988,5 +1024,9 @@ public class BGABanner extends RelativeLayout implements BGAViewPager.AutoPlayDe
      */
     public interface GuideDelegate {
         void onClickEnterOrSkip();
+    }
+
+    public void setLastPageScroll(boolean isLastPageScroll) {
+        this.isLastPageScroll = isLastPageScroll;
     }
 }
